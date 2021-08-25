@@ -1,0 +1,175 @@
+<html>
+    <head>
+        <title>spamclick</title>
+        <link rel="icon" href="favicon.png">
+        <link rel="preconnect" href="https://fonts.gstatic.com">
+`       <link href="https://fonts.googleapis.com/css2?family=Lexend+Deca&display=swap" rel="stylesheet">
+        <style>
+            body{
+                margin: 0;
+                width: 100%;
+                height: 100%;
+                overflow: hidden;
+                font-family: 'Lexend Deca', sans-serif;
+            }
+            #top{
+                background-color: #2e2e2e;
+                height: 50%;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                color: white;
+                display: block;
+            }
+            #clicks{
+                position: fixed;
+                top: 20px;
+                right: 20px;
+            }
+            #timer{
+                position: fixed;
+                top: 22%;
+                left: 50%;
+                transform: translateX(-50%);
+                font-size: 3vw;
+            }
+            #heading{
+                position: fixed;
+                top: 20px;
+                left: 20px;
+            }
+            #heading h1{
+                display: inline-block;
+            }
+            #heading img{
+                height: 50px;
+            }
+            #clickarea{
+                width: 100%;
+                height: 50%;
+                position: fixed;
+                left: 0;
+                bottom: 0;
+            }
+            #clicker{
+                width: 100%;
+                height: 100%;
+                display: block;
+                margin: 0;
+                padding: 0;
+                outline-width: 0;
+                border: none;
+                background: lightgray;
+                font-family: 'Lexend Deca',sans-serif;
+            }
+            #report{
+                width: 100%;
+                height: 50%;
+                z-index: 2;
+                position: fixed;
+                bottom: 0;
+                left: -100%;
+                transition-duration: 0.5s;
+            }
+            #close{
+                float: right;
+                padding-right: 20px;
+                font-size: 2vw;
+                display: block;
+            }
+            #close:hover{
+                cursor: pointer;
+            }
+            #result{
+                font-size: 3vw;
+                text-align: center;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="top">
+            <div id="heading">
+                <h1>spamclick</h1>
+                <img src="favicon.png">
+            </div>
+            <div id="timer">
+                <p id="time">Start Clicking!</p>
+            </div>
+            <p id="clicks">0</p>
+        </div>
+        <div id="clickarea">
+            <input type="button" id="clicker" value="Click Here">
+        </div>
+        <div id="report">
+            <p id="close">&times;</p>
+            <p id="result"></p>
+        </div>
+    </body>
+    <script>
+        document.addEventListener('contextmenu', event => event.preventDefault());
+
+        const time = document.getElementById('time'), clicks = document.getElementById('clicks');
+        let timeleft = 10, firstclick =true, timeup=false;
+        const timer = ()=>{
+            if(timeleft>=0){
+                time.innerText = timeleft+'s';
+                timeleft-=1;
+            }
+            else{
+                clearInterval(a)
+                timeup = true;
+                time.innerText = 'Results';
+                report();
+            }
+        }
+        const report = ()=>{
+            rp = document.getElementById('report');
+            rs = document.getElementById('result');
+            cl = parseInt(clicks.innerText)/10;
+            rs.innerText =cl + ' Clicks per Second';
+            if(cl<5){
+                rp.style.background = 'darkred';
+                rp.style.color = 'white';
+            }
+            else if(cl<10){
+                rp.style.background = '#FFBF00';
+                rp.style.color = 'black';
+            }
+            else{
+                rp.style.background = 'darkgreen';
+                rp.style.color = 'white';
+            }
+            open();
+        }
+        const open=()=>{
+            rp = document.getElementById('report');
+            rp.style.left = '0%';
+        }
+        const close=()=>{
+            rp = document.getElementById('report');
+            firstclick = true;
+            time.innerText = 'Start Clicking';
+            document.getElementById('clicker').value = 'Click Here';
+            rp.style.left = '-100%';
+        }
+        document.getElementById('clicker').addEventListener('click', ()=>{
+            if(firstclick){
+                timeleft = 10;
+                timer();
+                a = setInterval(timer,1000);
+                document.getElementById('clicker').value = '';
+                clicks.innerText=0;
+                firstclick = false;
+                timeup = false;
+            }
+            else{
+                if(timeup==false){
+                    x = parseInt(clicks.innerText)+1;
+                    clicks.innerText = x;
+                }
+            }
+        });
+        document.getElementById('close').addEventListener('click',close);
+    </script>
+</html>
